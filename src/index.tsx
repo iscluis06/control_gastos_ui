@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import LoginView from "./components/login/LoginView";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import LoginModel from "./components/login/LoginModel";
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <LoginView viewModel={new LoginModel()} />
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -18,7 +18,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "experimentalDecorators": true,
+    "plugins": [{ "name": "typescript-plugin-css-modules" }],
+    "useDefineForClassFields": true
   },
   "include": [
     "src"
