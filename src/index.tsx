@@ -5,11 +5,23 @@ import reportWebVitals from './reportWebVitals';
 import LoginView from "./components/login/LoginView";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LoginModel from "./components/login/LoginModel";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import { Provider } from 'mobx-react';
+import {loginStore} from "./stores/LoginStore";
+import PanelControlView from "./components/panel_control/PanelControlView";
+import PanelControlModel from "./components/panel_control/PanelControlModel";
 
 
 ReactDOM.render(
   <React.StrictMode>
-    <LoginView viewModel={new LoginModel()} />
+      <Provider store={loginStore}>
+          <BrowserRouter>
+              <Routes>
+                  <Route path="/" element={<LoginView viewModel={new LoginModel()} />} />
+                  <Route path="/panel_control" element={<PanelControlView viewModel={new PanelControlModel()} />} />
+              </Routes>
+          </BrowserRouter>
+      </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
