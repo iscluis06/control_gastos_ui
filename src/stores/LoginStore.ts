@@ -8,7 +8,6 @@ export class LoginStore{
     @observable
     token: string = '';
 
-
     constructor(){
         makeObservable(this);
     }
@@ -17,6 +16,11 @@ export class LoginStore{
     actualizarCredenciales(token: string, usuario: string){
         this.usuario = usuario;
         this.token = token;
+    }
+
+    @action.bound
+    actualizarUsuario(usuario: string){
+        this.usuario = usuario;
     }
 }
 
