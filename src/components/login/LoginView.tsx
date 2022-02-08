@@ -2,16 +2,19 @@ import {Component} from "react";
 import LoginModel from "./LoginModel";
 import {Button, Container, Form, Modal, Row, Toast} from "react-bootstrap";
 import styles from './LoginView.module.css';
-import {inject, observer} from "mobx-react";
-import {LoginStore} from "../../stores/LoginStore";
+import {observer} from "mobx-react";
 import {Navigate} from "react-router-dom";
+import {DefaultProps} from "../../GlobalTypes";
+import LoginContextProvider from "../../context/LoginContextProvider";
+import {LoginContext} from "../../context/LoginContext";
+import {Notificacion} from "../notificaciones/Notificacion";
 
-@inject('store')
 @observer
-export default class LoginView extends Component<{ store?: LoginStore, viewModel: LoginModel }> {
+export default class LoginView extends Component<DefaultProps<LoginModel>> {
+    static contextType = LoginContext;
 
     render() {
-        const {store} = this.props;
+        const {store} = this.context!;
         const {
             usuario,
             contrasena,
@@ -22,11 +25,18 @@ export default class LoginView extends Component<{ store?: LoginStore, viewModel
             error,
             reiniciarError
         } = this.props.viewModel;
-        if (store != undefined)
+        if (store != undefined) {
             actualizarLoginFunction(store.actualizarCredenciales);
+        }
         return (
-            <>
                 <Container fluid>
+                    { store !== undefined && store.token?.length > 0 && <Navigate to='/panel_control' />}
+                    { error
+                    &&  <Notificacion mostrarNotificacion={error}
+                        tipoModal={"Danger"}
+                        titulo={"Error"}
+                        mensaje={"Ocurrio un error durante el login"}
+                        cerrarNotificacion={reiniciarError} />}
                     <Row>
                         <Modal.Dialog>
                             <Modal.Header className={styles.centrar_texto}>Iniciar Sesión</Modal.Header>
@@ -51,18 +61,6 @@ export default class LoginView extends Component<{ store?: LoginStore, viewModel
                         </Modal.Dialog>
                     </Row>
                 </Container>
-                { error &&
-                (<Toast className="d-inline-block m-1" bg="Danger" onClose={reiniciarError}>
-                    <Toast.Header>
-                        <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
-                        <strong className="me-auto">Error</strong>
-                    </Toast.Header>
-                    <Toast.Body>
-                        Ocurrio un error durante el login.
-                    </Toast.Body>
-                </Toast>) }
-                { store !== undefined && store.token.length > 0 && <Navigate to={'panel_control'} />}
-            </>
         )
     }
 }

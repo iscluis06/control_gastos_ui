@@ -1,7 +1,8 @@
 import { makeObservable, observable, action } from 'mobx';
-import {ChangeEvent, MouseEventHandler} from "react";
+import {ChangeEvent} from "react";
 import {FormControlElement} from '../../GlobalTypes';
 import {encode} from 'base-64';
+import RequestLogic from "../../utils/RequestLogic";
 
 export default class LoginModel{
     @observable
@@ -28,15 +29,12 @@ export default class LoginModel{
     @action.bound
     async iniciarSesion(){
         try {
-            let headers = new Headers();
-            headers.set('Authorization', 'Basic ' + encode(this.usuario + ":" + this.contrasena));
-            headers.set("Content-Type", "application/json");
-            const result = await fetch("http://127.0.0.1:8000/api-token-auth/", {
-                headers: headers,
-                method: "POST",
-                body: JSON.stringify({"username": this.usuario, "password": this.contrasena})
-            });
-            const resultadoJSON = await result.json();
+            const requestLogic = new RequestLogic();
+            const resultadoJSON = await requestLogic.obtenerToken(this.usuario, this.contrasena);
+            if(resultadoJSON.token == undefined){
+                this.error = true;
+                return;
+            }
             this.loginFunction(resultadoJSON.token, this.usuario);
         }catch (Exception){
             console.log(Exception);
