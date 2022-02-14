@@ -1,3 +1,5 @@
+import {TransaccionesModel} from "./TransaccionesModel";
+import {TransaccionesStore} from "./TransaccionesStore";
 
 export type Transaccion = {
     transaccionId: number,
@@ -5,7 +7,8 @@ export type Transaccion = {
     transaccionCuenta: string,
     transaccionFecha: Date,
     transaccionCantidad: number,
-    transaccionUsuario: string
+    transaccionUsuario: string,
+    detalleTransaccion: number
 }
 
 export type TransaccionResponse = {
@@ -16,11 +19,16 @@ export type TransaccionResponse = {
     transaccion_cantidad: number,
     nombre_usuario: string,
     nombre_cuenta: string,
-    nombre_subcategoria: string
+    nombre_subcategoria: string,
+    detalle_transaccion: number
 }
 
 export type TransaccionDialogoProps = {
     mostrarDialogo: boolean,
     alternarDialogo: ()=>void,
     guardar: (subcategoria: number, cuenta:number, cantidad: number) => void
+}
+
+export type PanelTransaccionesProps = {
+    store: TransaccionesStore;
 }

@@ -1,23 +1,17 @@
-import {Component, useContext, useEffect} from "react";
-import {DefaultProps} from "../../GlobalTypes";
-import BalanceModel from "./BalanceModel";
+import {useEffect} from "react";
 import {Col, Modal, Row} from "react-bootstrap";
 import styles from './BalanceView.module.css';
-import {LoginContext} from "../../context/LoginContext";
 import {observer} from "mobx-react";
+import {convertirAValorMonetario} from "../../utils/Moneda";
+import {BalanceViewProps} from "./Types";
 
-const balanceModel = new BalanceModel();
+export const BalanceView = observer(({store}: BalanceViewProps) => {
 
-export const BalanceView = observer(() => {
-    const {store} = useContext(LoginContext);
-
-    balanceModel.asignarStore(store);
+    const {obtenerBalance, total, deuda, capital} = store;
 
     useEffect(()=> {
-        balanceModel.obtenerBalance();
+        obtenerBalance();
     },[]);
-
-    const {total, deuda, capital} = balanceModel;
 
     return (
         <Modal.Dialog>
@@ -26,16 +20,16 @@ export const BalanceView = observer(() => {
             </Modal.Header>
             <Modal.Body>
                 <Row>
-                    <Col md={9} xs={8}>Total Capital</Col>
-                    <Col md={3} xs={4}>{capital}</Col>
+                    <Col>Total Capital</Col>
+                    <Col className={styles.textoDerecha}>{convertirAValorMonetario(capital)}</Col>
                 </Row>
                 <Row>
-                    <Col md={9} xs={8}>Total Deuda</Col>
-                    <Col md={3} xs={4}>{deuda}</Col>
+                    <Col>Total Deuda</Col>
+                    <Col className={styles.textoDerecha}>{convertirAValorMonetario(deuda)}</Col>
                 </Row>
                 <Row>
-                    <Col md={9} xs={8}>Total</Col>
-                    <Col md={3} xs={4}>{total}</Col>
+                    <Col>Total</Col>
+                    <Col className={styles.textoDerecha}>{convertirAValorMonetario(total)}</Col>
                 </Row>
             </Modal.Body>
         </Modal.Dialog>

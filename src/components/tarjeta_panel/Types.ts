@@ -9,12 +9,15 @@ export type PanelProps = {
 }
 
 export type EntradaProps = {
-    idElemento: number,
-    botonIzquierda: boolean,
-    funcionIzquierda: (idElemento: number) => void,
-    children: React.ReactNode
+    children?: React.ReactNode
 }
 
 export type VaciaProps = {
     mensaje: string
+}
+
+export type TablaProps = {
+    columnas: string[],
+    info: (string|JSX.Element)[][],
+    nombreTarjeta: string
 }

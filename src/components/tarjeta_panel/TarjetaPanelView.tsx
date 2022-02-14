@@ -1,26 +1,16 @@
-import {Button, Card, Carousel, Col, Row} from "react-bootstrap";
+import {Button, Card, Carousel, Col, Row, Table} from "react-bootstrap";
 import styles from './TarjetaPanelView.module.css';
 import classNames from "classnames";
-import {EntradaProps, PanelProps, VaciaProps} from "./types";
+import {EntradaProps, PanelProps, TablaProps, VaciaProps} from "./Types";
 
 const TarjetaPanelEntrada = (props: EntradaProps) => {
-    const {idElemento, funcionIzquierda, botonIzquierda} = props;
     return (
-        <Card className={styles.contentCard} key={idElemento}>
+        <Card className={styles.contentCard}>
             <Card.Body>
                 <Row>
                     <Col style={{marginTop: '1em', marginBottom: '3em'}}>
                         {props.children}
                     </Col>
-                </Row>
-                <Row>
-                    {botonIzquierda && (
-                        <Col md={10} xs={8}>
-                            <Button key={`botonIzquierda${idElemento}`}
-                                    variant={"primary"}
-                                    onClick={(event) => funcionIzquierda(idElemento)}>Detalle</Button>
-                        </Col>
-                    )}
                 </Row>
             </Card.Body>
         </Card>);
@@ -31,7 +21,7 @@ const TarjetaPanelVacia = ({mensaje}: VaciaProps) => {
         <Card className={styles.contentCard}>
             <Card.Body>
                 <Row>
-                    <Col style={{marginTop: '1em', marginBottom: '3em'}}>
+                    <Col>
                         <h4>{mensaje}</h4>
                     </Col>
                 </Row>
@@ -39,17 +29,34 @@ const TarjetaPanelVacia = ({mensaje}: VaciaProps) => {
         </Card>);
 };
 
+const TarjetaPanelTabla = ({columnas, info}: TablaProps) => {
+    return (
+        <Table responsive>
+            <thead>
+                <tr>
+                    {columnas.map((columna, index) => (<th key={index}>{columna}</th>))}
+                </tr>
+            </thead>
+            <tbody>
+            {info.map((fila,index) => (<tr key={"f"+index}>
+                {fila.map(columna => (<td>{columna}</td>))}
+            </tr>))}
+            </tbody>
+        </Table>
+    )
+}
+
 const TarjetaPanelView = (props: PanelProps) => {
     const {nombreTarjeta, mensajeTodos, mensajeNuevo, mensajeNuevoAccion, esCarousel} = props;
     return (
-        <Col className={styles.rowGap} md={{span: 4, offset: 4}}>
+        <Col className={styles.rowGap}>
             <Row className={styles.tituloTarjeta}>
-                <Col xs={5} md={8}><h2>{nombreTarjeta}</h2></Col>
-                <Col className={styles.textoDerecha} xs={{span: 'auto'}} md={{span: 'auto'}}><Button
+                <Col><h2>{nombreTarjeta}</h2></Col>
+                <Col className={styles.textoDerecha}><Button
                     onClick={() => {
                         mensajeNuevoAccion()
-                    }} variant={"outline-primary"}>{mensajeNuevo}</Button><Button
-                    variant={"link"}>{mensajeTodos}</Button></Col>
+                    }} variant={"outline-primary"}>{mensajeNuevo}</Button>
+                    <Button variant={"link"}>{mensajeTodos}</Button></Col>
             </Row>
             <Row>
                 <Col>
@@ -70,5 +77,6 @@ const TarjetaPanelView = (props: PanelProps) => {
 
 TarjetaPanelView.Entrada = TarjetaPanelEntrada;
 TarjetaPanelView.Vacia = TarjetaPanelVacia;
+TarjetaPanelView.Tabla = TarjetaPanelTabla;
 
 export {TarjetaPanelView};

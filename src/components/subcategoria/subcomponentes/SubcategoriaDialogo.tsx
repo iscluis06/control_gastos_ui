@@ -1,12 +1,9 @@
-import {CategoriaDialogoProps} from "../../categoria/Types";
-import {useContext, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {Button, Col, Container, Form, FormControl, FormSelect, Modal, Row} from "react-bootstrap";
 import {SubcategoriaDialogoProps} from "../Types";
-import CategoriaModel from "../../categoria/CategoriaModel";
-import {LoginContext} from "../../../context/LoginContext";
-import {observer} from "mobx-react";
+import CategoriaStore from "../../categoria/CategoriaStore";
 
-const categoriaModelo = new CategoriaModel();
+const categoriaModelo = new CategoriaStore();
 
 export const SubcategoriaDialogo = ({mostrarDialogo, alternarDialogo, guardar}:SubcategoriaDialogoProps) => {
     const [formulario, setFormulario] = useState({
@@ -14,13 +11,10 @@ export const SubcategoriaDialogo = ({mostrarDialogo, alternarDialogo, guardar}:S
         subcategoriaCategoria: 0
     });
 
-    const {store} = useContext(LoginContext);
-    categoriaModelo.asignarStore(store);
-
     const {listaResultados:categorias} = categoriaModelo;
 
     useEffect(()=>{
-        categoriaModelo.obtenerCategorias(-1);
+        categoriaModelo.obtenerCategorias(0);
     },[]);
 
     return (
@@ -66,7 +60,7 @@ export const SubcategoriaDialogo = ({mostrarDialogo, alternarDialogo, guardar}:S
                                     }));
                                 }}>
                                     <option defaultChecked>Seleccione una opción</option>
-                                    {categorias.map(categoria => {
+                                    {categorias?.map(categoria => {
                                         return (<option value={categoria.categoriaId}>{categoria.categoriaNombre}</option>)
                                     })}
                                 </FormSelect>

@@ -1,30 +1,26 @@
 import {TransaccionDialogoProps} from "../Types";
 import {Button, Col, Container, Form, FormControl, FormSelect, Modal, Row} from "react-bootstrap";
 import {useContext, useEffect, useState} from "react";
-import {LoginContext} from "../../../context/LoginContext";
-import SubcategoriaModel from "../../subcategoria/SubcategoriaModel";
-import CuentasModel from "../../cuentas/CuentasModel";
+import SubcategoriaStore from "../../subcategoria/SubcategoriaStore";
+import CuentasStore from "../../cuentas/CuentasStore";
+import {observer} from "mobx-react";
 
-const subcategoriaModelo = new SubcategoriaModel();
-const cuentaModelo = new CuentasModel();
+const subcategoriaModelo = new SubcategoriaStore();
+const cuentaModelo = new CuentasStore();
 
-export const TransaccionDialogo = ({mostrarDialogo, alternarDialogo, guardar}: TransaccionDialogoProps) => {
+export const TransaccionDialogo = observer(({mostrarDialogo, alternarDialogo, guardar}: TransaccionDialogoProps) => {
     const [formulario, setFormulario] = useState({
         subcategoria: 0,
         cuenta: 0,
         cantidad: 0
     });
 
-    const {store} = useContext(LoginContext);
-    subcategoriaModelo.asignarStore(store);
-    cuentaModelo.asignarStore(store);
-
     const {listaResultados: subcategorias} = subcategoriaModelo;
     const {listaResultados: cuentas} = cuentaModelo;
 
     useEffect(() => {
-        subcategoriaModelo.obtenerSubcategorias(-1);
-        cuentaModelo.obtenerCuentas(-1);
+        subcategoriaModelo.obtenerSubcategorias(0);
+        cuentaModelo.obtenerCuentas(0);
     }, []);
 
     return (<Modal show={mostrarDialogo} onHide={() => {
@@ -55,7 +51,7 @@ export const TransaccionDialogo = ({mostrarDialogo, alternarDialogo, guardar}: T
                                 }));
                             }}>
                                 <option defaultChecked>Seleccione una opción</option>
-                                {subcategorias.map(subcategoria => {
+                                {subcategorias?.map(subcategoria => {
                                     return (<option
                                         value={subcategoria.subcategoriaId}>{subcategoria.nombreCategoria}-{subcategoria.subcategoriaNombre}</option>)
                                 })}
@@ -78,7 +74,7 @@ export const TransaccionDialogo = ({mostrarDialogo, alternarDialogo, guardar}: T
                                 }
                             }}>
                                 <option defaultChecked>Seleccione una opción</option>
-                                {cuentas.map(cuentas => {
+                                {cuentas?.map(cuentas => {
                                     return (<option value={cuentas.cuentaId}>{cuentas.cuentaNombre}</option>)
                                 })}
                             </FormSelect>
@@ -107,4 +103,4 @@ export const TransaccionDialogo = ({mostrarDialogo, alternarDialogo, guardar}: T
             </Container>
         </Modal.Body>
     </Modal>)
-}
+});

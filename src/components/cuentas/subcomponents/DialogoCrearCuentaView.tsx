@@ -1,68 +1,31 @@
 import {Button, Col, Container, Form, FormControl, FormSelect, Modal, Row} from "react-bootstrap";
-import {DialogoCrearCuentaProps} from "../Types";
 import {observer} from "mobx-react";
 import {useState} from "react";
+import {DialogoCreacionViewProps, TipoEntrada} from "../../dialogo/Types";
+import {DialogoCreacionView} from "../../dialogo/DialogoCreacionView";
+import {CuentaCreacionView, CuentaGuardarTipo} from "../Types";
 
-export const DialogoCrearCuentaView = observer(({mostrarDialogo, alternarDialogo, guardar}: DialogoCrearCuentaProps) => {
-    const [formulario, setFormulario] = useState({
-            nombre_cuenta: '',
-            tipo_cuenta: ''
-        });
+export const DialogoCrearCuentaView = observer(({store:{ocultarDialogo, mostrarDialogo,mostrar, guardar}}:CuentaCreacionView) => {
+    const tiposEntrada: TipoEntrada[] = [
+        {
+            etiqueta: "Nombre",
+            nombreEntrada: "nombre",
+            valorInicial: '',
+            tipoEntrada: 'text'
+        },
+        {
+            etiqueta: "Deuda",
+            nombreEntrada: "deuda",
+            valorInicial: false,
+            tipoEntrada: 'checkbox'
+        },
+        {
+            etiqueta: "Monto",
+            nombreEntrada: "monto",
+            valorInicial: 0,
+            tipoEntrada: 'number'
+        }
+    ]
 
-    return <Modal show={mostrarDialogo} onHide={() => {
-        alternarDialogo()
-    }}>
-        <Modal.Header closeButton>
-            <Modal.Title>
-                Crear nueva cuenta
-            </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-            <Container>
-                <Form onSubmit={event => {
-                    guardar(formulario.nombre_cuenta, formulario.tipo_cuenta);
-                    setFormulario({tipo_cuenta: '', nombre_cuenta: ''})
-                    event.preventDefault();
-                }}>
-                    <Row>
-                        <Col>
-                            <Form.Label htmlFor='nombre_cuenta'>Nombre cuenta</Form.Label>
-                        </Col>
-                        <Col>
-                            <FormControl id='nombre_cuenta' value={formulario.nombre_cuenta} onChange={event => {
-                                const {value} = event.target;
-                                setFormulario(prevState => ({
-                                    ...prevState,
-                                    ['nombre_cuenta']: value
-                                }));
-                            }}/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Form.Label htmlFor='tipo_cuenta'>Tipo cuenta</Form.Label>
-                        </Col>
-                        <Col>
-                            <FormSelect id='tipo_cuenta' value={formulario.tipo_cuenta} onChange={event => {
-                                const {value} = event.target;
-                                setFormulario(prevState => ({
-                                    ...prevState,
-                                    ['tipo_cuenta']: value
-                                }));
-                            }}>
-                                <option defaultChecked>Seleccione una opción</option>
-                                <option value='A'>Activo</option>
-                                <option value='P'>Pasivo</option>
-                            </FormSelect>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={"auto"}>
-                            <Button type={"submit"}>Guardar</Button>
-                        </Col>
-                    </Row>
-                </Form>
-            </Container>
-        </Modal.Body>
-    </Modal>
+    return <DialogoCreacionView<CuentaGuardarTipo> mostrar={mostrar} ocultar={ocultarDialogo} funcionGuardar={guardar} componentes={tiposEntrada} titulo={"Crear cuenta"} />
 });

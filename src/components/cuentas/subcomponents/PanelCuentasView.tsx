@@ -1,16 +1,16 @@
-import {Component, useContext, useEffect} from "react";
-import CuentasModel from "../CuentasModel";
+import { useEffect} from "react";
+import CuentasStore from "../CuentasStore";
 import {Carousel, Col, Container, Row, Spinner} from "react-bootstrap";
 import {Cuenta} from "../Types";
 import {observer} from "mobx-react";
-import {LoginContext} from "../../../context/LoginContext";
 import {TarjetaPanelView} from "../../tarjeta_panel/TarjetaPanelView";
 import {DialogoCrearCuentaView} from "./DialogoCrearCuentaView";
+import {convertirAValorMonetario} from "../../../utils/Moneda";
 
-const cuentasModel = new CuentasModel();
+const cuentasModel = new CuentasStore();
 
 const CuentasFragment = (props: Cuenta) => {
-    const {cuentaNombre, cuentaTipo, cuentaDebe, cuentaHaber} = props;
+    const {cuentaNombre, cuentaMonto, cuentaDeuda} = props;
     return (<Container>
         <Row>
             <Col>
@@ -18,32 +18,7 @@ const CuentasFragment = (props: Cuenta) => {
                     <h3>{cuentaNombre}</h3>
                 </Row>
                 <Row>
-                    <span style={{fontWeight: "bold"}}>{cuentaTipo == 'A' ? 'Activo' : 'Pasivo'}</span>
-                    <hr/>
-                </Row>
-                <Row>
-                    <Col style={{borderRight: '1px solid black'}}>
-                        <Row>
-                            <span>Debe</span>
-                        </Row>
-                        <Row style={{marginLeft: "auto", marginRight: 0, textAlign: "right"}}>
-                                <span>{Intl.NumberFormat('es-MX', {
-                                    style: 'currency',
-                                    currency: 'MXN'
-                                }).format(cuentaDebe)}</span>
-                        </Row>
-                    </Col>
-                    <Col>
-                        <Row>
-                            <span>Haber</span>
-                        </Row>
-                        <Row style={{marginLeft: "auto", marginRight: 0, textAlign: "right"}}>
-                                <span>{Intl.NumberFormat('es-MX', {
-                                    style: 'currency',
-                                    currency: 'MXN'
-                                }).format(cuentaHaber)}</span>
-                        </Row>
-                    </Col>
+                    <TarjetaPanelView.Tabla nombreTarjeta={cuentaNombre} columnas={["Monto", "Deuda"]} info={[[convertirAValorMonetario(cuentaMonto),(cuentaDeuda ? 'Si':'No')]]} />
                 </Row>
             </Col>
         </Row>
@@ -52,19 +27,17 @@ const CuentasFragment = (props: Cuenta) => {
 
 
 export const PanelCuentasView = observer(() => {
-    const {store} = useContext(LoginContext);
-    cuentasModel.asignarStore(store);
 
 
     useEffect(() => {
         cuentasModel.obtenerCuentas();
     },[])
 
-    const {listaResultados, alternarDialogo, loading} = cuentasModel;
+    const {listaResultados, mostrarDialogo, loading} = cuentasModel;
     return (
         <>
-            <TarjetaPanelView mensajeNuevoAccion={alternarDialogo}
-                              mensajeTodosAccion={alternarDialogo}
+            <TarjetaPanelView mensajeNuevoAccion={mostrarDialogo}
+                              mensajeTodosAccion={mostrarDialogo}
                               nombreTarjeta={"Cuentas"} mensajeTodos={"Ver todas"}
                               mensajeNuevo={"Nueva"} esCarousel={true}>
                 {loading &&
@@ -78,18 +51,15 @@ export const PanelCuentasView = observer(() => {
                         </Col>
                     </Row>
                 </Container>}
-                {loading===false && listaResultados.length===0 && <TarjetaPanelView.Vacia mensaje={"Sin resultados"} />}
-                {loading === false && listaResultados.map(resultado => {
+                {loading===false && listaResultados?.length===0 && <TarjetaPanelView.Vacia mensaje={"Sin resultados"} />}
+                {loading === false && listaResultados?.map(resultado => {
                     return (<Carousel.Item>
-                        <TarjetaPanelView.Entrada idElemento={resultado.cuentaId} botonIzquierda={true}
-                                                  funcionIzquierda={(idElemento: number) => {
-                                                  }}>
+                        <TarjetaPanelView.Entrada>
                             <CuentasFragment
-                                cuentaDebe={resultado.cuentaDebe}
+                                cuentaDeuda={resultado.cuentaDeuda}
                                 cuentaId={resultado.cuentaId}
-                                cuentaHaber={resultado.cuentaHaber}
+                                cuentaMonto={resultado.cuentaMonto}
                                 cuentaCreada={resultado.cuentaCreada}
-                                cuentaTipo={resultado.cuentaTipo}
                                 cuentaNombre={resultado.cuentaNombre}
                                 cuentaModificada={resultado.cuentaModificada}
                                 cuentaUsuario={resultado.cuentaUsuario}/>
@@ -97,7 +67,6 @@ export const PanelCuentasView = observer(() => {
                     </Carousel.Item>);
                 })}
             </TarjetaPanelView>
-            <DialogoCrearCuentaView mostrarDialogo={cuentasModel.mostrarDialogo}
-                                    alternarDialogo={cuentasModel.alternarDialogo} guardar={cuentasModel.guardar}/>
+            <DialogoCrearCuentaView store={cuentasModel}/>
         </>);
 });

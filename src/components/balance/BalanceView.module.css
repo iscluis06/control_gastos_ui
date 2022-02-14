@@ -1,4 +1,10 @@
 
-.centerText {
+.textoCentro {
     margin: auto;
 }
+
+.textoDerecha{
+    text-align: right;
+}
+
+

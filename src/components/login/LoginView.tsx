@@ -1,42 +1,33 @@
 import {Component} from "react";
-import LoginModel from "./LoginModel";
-import {Button, Container, Form, Modal, Row, Toast} from "react-bootstrap";
+import LoginStore from "./LoginStore";
+import {Button, Container, Form, Modal, Row} from "react-bootstrap";
 import styles from './LoginView.module.css';
 import {observer} from "mobx-react";
 import {Navigate} from "react-router-dom";
-import {DefaultProps} from "../../GlobalTypes";
-import LoginContextProvider from "../../context/LoginContextProvider";
-import {LoginContext} from "../../context/LoginContext";
 import {Notificacion} from "../notificaciones/Notificacion";
+import {requestLogic} from "../../RequestLogic";
+import {LoginViewProps} from "./Types";
 
-@observer
-export default class LoginView extends Component<DefaultProps<LoginModel>> {
-    static contextType = LoginContext;
+export const LoginView =  observer(({store}: LoginViewProps) => {
 
-    render() {
-        const {store} = this.context!;
         const {
             usuario,
             contrasena,
-            iniciarSesion,
             actualizarUsuario,
             actualizarContrasena,
-            actualizarLoginFunction,
             error,
-            reiniciarError
-        } = this.props.viewModel;
-        if (store != undefined) {
-            actualizarLoginFunction(store.actualizarCredenciales);
-        }
+            actualizarError,
+            iniciarSesion
+        } = store;
         return (
                 <Container fluid>
-                    { store !== undefined && store.token?.length > 0 && <Navigate to='/panel_control' />}
+                    { requestLogic.token?.length > 0 && <Navigate to='/panel_control' />}
                     { error
                     &&  <Notificacion mostrarNotificacion={error}
                         tipoModal={"Danger"}
                         titulo={"Error"}
                         mensaje={"Ocurrio un error durante el login"}
-                        cerrarNotificacion={reiniciarError} />}
+                        cerrarNotificacion={() => actualizarError(false)} />}
                     <Row>
                         <Modal.Dialog>
                             <Modal.Header className={styles.centrar_texto}>Iniciar Sesión</Modal.Header>
@@ -53,7 +44,7 @@ export default class LoginView extends Component<DefaultProps<LoginModel>> {
                                                       onChange={actualizarContrasena}/>
                                     </Form.Group>
                                     <div className={styles.centrar_boton}>
-                                        <Button onClick={iniciarSesion} variant="primary" type="button">Iniciar
+                                        <Button onClick={() => iniciarSesion()} variant="primary" type="button">Iniciar
                                             Sesión</Button>
                                     </div>
                                 </Form>
@@ -61,6 +52,5 @@ export default class LoginView extends Component<DefaultProps<LoginModel>> {
                         </Modal.Dialog>
                     </Row>
                 </Container>
-        )
-    }
-}
+        );
+});

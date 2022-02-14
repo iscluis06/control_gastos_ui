@@ -1,8 +1,15 @@
-import {Component, useContext} from "react";
-import {LoginContext} from "../context/LoginContext";
 import {Navigate} from "react-router-dom";
+import {requestLogic} from "../RequestLogic";
+import {observer} from "mobx-react";
 
-export const ComponenteProtegido = () => {
-        const {store} = useContext(LoginContext);
-        return (<>{(store.token === null || store.token == '' ? <Navigate to='/' /> : '')}</>);
-}
+export const ComponenteProtegido = observer(() => {
+        const token = localStorage.getItem("token");
+        const usuario = localStorage.getItem("usuario");
+        if(token != undefined && usuario != undefined){
+                console.log(token);
+                console.log(usuario);
+                requestLogic.actualizarCredenciales(token, usuario);
+        }
+
+        return (<>{(requestLogic.token === null || requestLogic.token == '' ? <Navigate to='/' /> : '')}</>);
+});

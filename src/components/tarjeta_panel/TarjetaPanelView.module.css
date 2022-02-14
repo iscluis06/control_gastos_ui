@@ -35,6 +35,5 @@ a[class*="carousel-control-next"], a[class*="carousel-control-prev"]{
 }
 
 .textoDerecha{
-    margin-left: auto;
-    margin-right: 0;
+    text-align:right;
 }

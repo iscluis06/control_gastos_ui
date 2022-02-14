@@ -1,8 +1,9 @@
+import CuentasStore from "./CuentasStore";
+
 export type Cuenta = {
     cuentaId: number,
-    cuentaTipo: string,
-    cuentaDebe: number,
-    cuentaHaber: number,
+    cuentaDeuda: boolean,
+    cuentaMonto: number,
     cuentaNombre: string,
     cuentaCreada: Date,
     cuentaModificada: Date,
@@ -11,18 +12,20 @@ export type Cuenta = {
 
 export type CuentaResponse = {
     cuenta_id: number,
-    cuenta_tipo: string,
-    cuenta_debe: number,
-    cuenta_haber: number,
+    cuenta_deuda: boolean,
+    cuenta_monto: number,
     cuenta_nombre: string,
     cuenta_creada: Date,
     cuenta_modificada: Date,
     nombre_usuario: string
 }
 
-export type DialogoCrearCuentaProps = {
-    alternarDialogo: () => void,
-    mostrarDialogo: boolean,
-    guardar: (nombre_cuenta:string, tipo_cuenta:string) => void
+export type CuentaGuardarTipo = {
+    deuda: boolean,
+    nombre: string,
+    monto: number
 }
 
+export type CuentaCreacionView = {
+    store: CuentasStore;
+}
