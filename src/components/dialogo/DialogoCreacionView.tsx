@@ -43,7 +43,8 @@ export const DialogoCreacionView = observer(<T, >({
                 }}/>);
                 break;
             case 'checkbox':
-                return (<ToggleButton type={"checkbox"} variant="outline-primary" id={nombreEntrada} value={1} checked={formulario[nombreEntrada]} onChange={event => {
+                return (<ToggleButton type={"checkbox"} variant="outline-primary" id={nombreEntrada} value={1}
+                                      checked={formulario[nombreEntrada]} onChange={event => {
                     const {checked} = event.target;
                     setFormulario((prevState: any) => ({
                         ...prevState,
@@ -55,13 +56,10 @@ export const DialogoCreacionView = observer(<T, >({
                 return (
                     <FormControl type="number" id={nombreEntrada} value={formulario[nombreEntrada]} onChange={event => {
                         const {value} = event.target;
-                        const attemptedParse = parseInt(value);
-                        if (!Object.is(NaN, attemptedParse)) {
-                            setFormulario((prevState: any) => ({
-                                ...prevState,
-                                [nombreEntrada]: attemptedParse
-                            }))
-                        }
+                        setFormulario((prevState: any) => ({
+                            ...prevState,
+                            [nombreEntrada]: value
+                        }))
                     }}/>);
                 break;
             default:
