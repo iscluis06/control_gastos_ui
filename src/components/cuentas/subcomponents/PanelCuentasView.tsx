@@ -37,7 +37,7 @@ export const PanelCuentasView = observer(() => {
     return (
         <>
             <TarjetaPanelView mensajeNuevoAccion={mostrarDialogo}
-                              mensajeTodosAccion={mostrarDialogo}
+                              enlaceTodos={"/cuentas"}
                               nombreTarjeta={"Cuentas"} mensajeTodos={"Ver todas"}
                               mensajeNuevo={"Nueva"} esCarousel={true}>
                 {loading &&

@@ -2,6 +2,7 @@ import {Button, Card, Carousel, Col, Row, Table} from "react-bootstrap";
 import styles from './TarjetaPanelView.module.css';
 import classNames from "classnames";
 import {EntradaProps, PanelProps, TablaProps, VaciaProps} from "./Types";
+import {useNavigate} from "react-router-dom";
 
 const TarjetaPanelEntrada = (props: EntradaProps) => {
     return (
@@ -47,7 +48,8 @@ const TarjetaPanelTabla = ({columnas, info}: TablaProps) => {
 }
 
 const TarjetaPanelView = (props: PanelProps) => {
-    const {nombreTarjeta, mensajeTodos, mensajeNuevo, mensajeNuevoAccion, esCarousel} = props;
+    let navigate = useNavigate();
+    const {nombreTarjeta, mensajeTodos, mensajeNuevo, mensajeNuevoAccion, esCarousel, enlaceTodos} = props;
     return (
         <Col className={styles.rowGap}>
             <Row className={styles.tituloTarjeta}>
@@ -56,7 +58,7 @@ const TarjetaPanelView = (props: PanelProps) => {
                     onClick={() => {
                         mensajeNuevoAccion()
                     }} variant={"outline-primary"}>{mensajeNuevo}</Button>
-                    <Button variant={"link"}>{mensajeTodos}</Button></Col>
+                    <Button onClick={() => navigate(enlaceTodos)} variant={"link"}>{mensajeTodos}</Button></Col>
             </Row>
             <Row>
                 <Col>

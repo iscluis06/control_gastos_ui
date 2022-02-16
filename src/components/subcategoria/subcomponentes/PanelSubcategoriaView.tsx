@@ -23,8 +23,7 @@ export const PanelSubcategoriaView = observer(() => {
 
     return (
         <>
-            <TarjetaPanelView nombreTarjeta={"Subcategoria"} mensajeTodos={"Ver todas"} mensajeTodosAccion={() => {
-            }} mensajeNuevo={"Nueva"} mensajeNuevoAccion={alternarDialogo} esCarousel={false}>
+            <TarjetaPanelView nombreTarjeta={"Subcategoria"} mensajeTodos={"Ver todas"} enlaceTodos={"/subcategorias"} mensajeNuevo={"Nueva"} mensajeNuevoAccion={alternarDialogo} esCarousel={false}>
                 {loading === false && listaResultados?.length == 0 &&
                 <TarjetaPanelView.Vacia mensaje={"Sin resultados"}/>}
                 {loading &&

@@ -1,7 +1,7 @@
 export type PanelProps = {
     nombreTarjeta: string;
     mensajeTodos: string;
-    mensajeTodosAccion: () => void;
+    enlaceTodos: string;
     mensajeNuevo: string;
     mensajeNuevoAccion: () => void;
     children?: React.ReactNode;

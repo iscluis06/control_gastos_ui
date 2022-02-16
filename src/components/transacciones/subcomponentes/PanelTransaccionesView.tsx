@@ -32,8 +32,7 @@ export const PanelTransaccionesView = observer(({store}:PanelTransaccionesProps)
 
     return (
         <>
-            <TarjetaPanelView nombreTarjeta={"Transacciones"} mensajeTodos={"Ver todas"} mensajeTodosAccion={() => {
-            }} mensajeNuevo={"Nueva"} mensajeNuevoAccion={alternarDialogo} esCarousel={false}>
+            <TarjetaPanelView nombreTarjeta={"Transacciones"} mensajeTodos={"Ver todas"} enlaceTodos={"/transacciones"} mensajeNuevo={"Nueva"} mensajeNuevoAccion={alternarDialogo} esCarousel={false}>
                 {loading === false && listaResultados?.length == 0 &&
                 <TarjetaPanelView.Vacia mensaje={"Sin resultados"}/>}
                 {loading &&

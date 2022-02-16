@@ -17,8 +17,7 @@ export const PanelCategoriaView = observer(() => {
 
     return (
         <>
-            <TarjetaPanelView nombreTarjeta={"Categorias"} mensajeTodos={"Ver todas"} mensajeTodosAccion={() => {
-            }} mensajeNuevo={"Nueva"} mensajeNuevoAccion={alternarDialogo} esCarousel={false}>
+            <TarjetaPanelView nombreTarjeta={"Categorias"} mensajeTodos={"Ver todas"} enlaceTodos={"/categorias"} mensajeNuevo={"Nueva"} mensajeNuevoAccion={alternarDialogo} esCarousel={false}>
                 {loading === false && listaResultados?.length == 0 &&
                 <TarjetaPanelView.Vacia mensaje={"Sin resultados"}/>}
                 {loading &&
