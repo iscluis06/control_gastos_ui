@@ -24,7 +24,7 @@ export default class CategoriaStore {
     @action.bound
     async obtenerCategorias(limit: number = 5) {
         this.loading = true;
-        const response: CategoriaResponse[] = await requestLogic.realizarPeticion<CategoriaResponse[]>("control_gastos/categorias/limit/5", "GET");
+        const response: CategoriaResponse[] = await requestLogic.realizarPeticion<CategoriaResponse[]>(`control_gastos/categorias/limit/${limit}`, "GET");
         this.mapResultados(response);
     }
 
