@@ -2,7 +2,6 @@ import {Cuenta} from "../cuentas/Types";
 
 export type Categoria = {
     categoriaId: number,
-    categoriaCuenta: Cuenta,
     categoriaNombre: string,
     categoriaCreado: Date,
     categoriaModificado: Date,
@@ -11,7 +10,6 @@ export type Categoria = {
 
 export type CategoriaResponse = {
     categoria_id: number,
-    categoria_cuenta: Cuenta,
     categoria_nombre: string,
     categoria_creado: Date,
     categoria_modificado: Date,
@@ -21,5 +19,9 @@ export type CategoriaResponse = {
 export type CategoriaDialogoProps = {
     mostrarDialogo: boolean,
     alternarDialogo: () => void,
-    guardar: (categoriaNombre: string) => void
+    guardar: (guardar: CategoriaGuardar) => void
+}
+
+export type CategoriaGuardar = {
+    categoria_nombre: string
 }

@@ -13,6 +13,10 @@ export const PanelTransaccionesView = observer(({store}:PanelTransaccionesProps)
 
     const {alternarDialogo, loading, mostrarDialogo, listaResultados, guardar, obtenerTransacciones} = store;
 
+    useEffect(() => {
+        obtenerTransacciones();
+    },[]);
+
     const infoMapping = (transacciones: Transaccion[]) => {
         return transacciones.map(transaccion => [
             transaccion.transaccionSubcategoria,
@@ -20,14 +24,11 @@ export const PanelTransaccionesView = observer(({store}:PanelTransaccionesProps)
             convertirAValorMonetario(transaccion.transaccionCantidad),
             new Date(transaccion.transaccionFecha).toLocaleDateString(),
             <Button className={styles.boton100} size={"sm"} onClick={()=>store.crearDetalle(transaccion.transaccionId, transaccion.detalleTransaccion)}>
-                {console.log(transaccion.detalleTransaccion)}
                 {transaccion.detalleTransaccion !== null ? 'Ver':'Crear'}
             </Button>]);
     }
 
-    useEffect(() => {
-        obtenerTransacciones();
-    },[]);
+
 
     return (
         <>

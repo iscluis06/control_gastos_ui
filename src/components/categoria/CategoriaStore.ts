@@ -1,5 +1,5 @@
 import {action, makeObservable, observable} from "mobx";
-import {Categoria, CategoriaResponse} from "./Types";
+import {Categoria, CategoriaGuardar, CategoriaResponse} from "./Types";
 import RequestLogic, {requestLogic} from "../../RequestLogic";
 
 export default class CategoriaStore {
@@ -32,7 +32,6 @@ export default class CategoriaStore {
     mapResultados(responseBody: CategoriaResponse[]) {
         this.listaResultados = responseBody?.map(resultado => ({
             categoriaId: resultado.categoria_id,
-            categoriaCuenta: resultado.categoria_cuenta,
             categoriaNombre: resultado.categoria_nombre,
             categoriaCreado: resultado.categoria_creado,
             categoriaModificado: resultado.categoria_modificado,
@@ -42,9 +41,9 @@ export default class CategoriaStore {
     }
 
     @action.bound
-    async guardar(categoriaNombre: string) {
+    async guardar({categoria_nombre}: CategoriaGuardar) {
         const cuerpo = {
-            categoria_nombre: categoriaNombre
+            categoria_nombre: categoria_nombre
         };
         const response: CategoriaResponse = await requestLogic.realizarPeticion<CategoriaResponse>("control_gastos/categorias", "POST", cuerpo);
         if (response !==undefined) {

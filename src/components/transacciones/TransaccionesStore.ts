@@ -1,6 +1,6 @@
 import {action, makeObservable, observable} from "mobx";
 import RequestLogic, {requestLogic} from "../../RequestLogic";
-import {Transaccion, TransaccionResponse} from "./Types";
+import {Transaccion, TransaccionGuardar, TransaccionResponse} from "./Types";
 import DetalleTransaccionStore from "../detalle_transaccion/DetalleTransaccionStore";
 import {balanceStore} from "../balance/BalanceStore";
 
@@ -55,7 +55,7 @@ export class TransaccionesStore {
     }
 
     @action.bound
-    async guardar(subcategoria: number, cuenta: number, cantidad: number) {
+    async guardar({subcategoria, cuenta, cantidad}: TransaccionGuardar) {
         const cuerpo = {
             transaccion_subcategoria: subcategoria,
             transaccion_cuenta: cuenta,

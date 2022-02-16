@@ -20,7 +20,7 @@ export const DialogoCreacionView = observer(<T, >({
 
     const [formulario, setFormulario] = useState(stateProps);
 
-    const obtenerEntrada = (etiqueta: string, tipoEntrada: TiposComponente, nombreEntrada: string, options?: HTMLOptionElement[]) => {
+    const obtenerEntrada = (etiqueta: string, tipoEntrada: TiposComponente, nombreEntrada: string, options?: JSX.Element[]) => {
         switch (tipoEntrada) {
             case 'select':
                 return (<FormSelect id={nombreEntrada} value={formulario[nombreEntrada]} onChange={event => {
@@ -30,7 +30,7 @@ export const DialogoCreacionView = observer(<T, >({
                         [nombreEntrada]: Number(value)
                     }));
                 }}>
-                    {options}
+                    {options!}
                 </FormSelect>);
                 break;
             case 'text':
@@ -88,7 +88,7 @@ export const DialogoCreacionView = observer(<T, >({
                         </Row>);
                     })}
                     <Row>
-                        <Col md={"auto"}>
+                        <Col md={"auto"} className={styles.alineacionDerecha}>
                             <Button type={"submit"}>Guardar</Button>
                         </Col>
                     </Row>

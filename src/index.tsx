@@ -7,6 +7,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import LoginStore from "./components/login/LoginStore";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {PanelControlView} from "./components/panel_control/PanelControlView";
+import {CuentasView} from "./components/cuentas/CuentasView";
+import {CategoriaView} from "./components/categoria/CategoriaView";
+import {SubcategoriaView} from "./components/subcategoria/SubcategoriaView";
+import {TransaccionesView} from "./components/transacciones/TransaccionesView";
 
 
 ReactDOM.render(
@@ -14,8 +18,11 @@ ReactDOM.render(
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<LoginView store={new LoginStore()}/>}/>
-                <Route path="/panel_control"
-                       element={<PanelControlView/>}/>
+                <Route path="/panel_control" element={<PanelControlView/>}/>
+                <Route path="/cuentas" element={<CuentasView/>}/>
+                <Route path="/categorias" element={<CategoriaView/>}/>
+                <Route path="/subcategorias" element={<SubcategoriaView/>}/>
+                <Route path="/transacciones" element={<TransaccionesView/>}/>
             </Routes>
         </BrowserRouter>
     </React.StrictMode>,

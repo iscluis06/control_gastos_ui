@@ -6,8 +6,6 @@ export const ComponenteProtegido = observer(() => {
         const token = localStorage.getItem("token");
         const usuario = localStorage.getItem("usuario");
         if(token != undefined && usuario != undefined){
-                console.log(token);
-                console.log(usuario);
                 requestLogic.actualizarCredenciales(token, usuario);
         }
 

@@ -1,6 +1,6 @@
 import {action, makeObservable, observable} from "mobx";
 import RequestLogic, {requestLogic} from "../../RequestLogic";
-import {Subcategoria, SubcategoriaResponse} from "./Types";
+import {Subcategoria, SubcategoriaGuardar, SubcategoriaResponse} from "./Types";
 
 export default class SubcategoriaStore {
     @observable
@@ -42,7 +42,7 @@ export default class SubcategoriaStore {
     }
 
     @action.bound
-    async guardar(subcategoriaNombre: string, subcategoriaCategoria: number) {
+    async guardar({subcategoriaNombre, subcategoriaCategoria}: SubcategoriaGuardar) {
         const cuerpo = {
             subcategoria_nombre: subcategoriaNombre,
             subcategoria_categoria: subcategoriaCategoria

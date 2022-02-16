@@ -26,9 +26,15 @@ export type TransaccionResponse = {
 export type TransaccionDialogoProps = {
     mostrarDialogo: boolean,
     alternarDialogo: ()=>void,
-    guardar: (subcategoria: number, cuenta:number, cantidad: number) => void
+    guardar: ({subcategoria, cuenta, cantidad}:TransaccionGuardar) => void
 }
 
 export type PanelTransaccionesProps = {
     store: TransaccionesStore;
+}
+
+export type TransaccionGuardar = {
+    subcategoria: number,
+    cuenta:number,
+    cantidad: number
 }

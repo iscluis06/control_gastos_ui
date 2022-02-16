@@ -1,78 +1,45 @@
 import {useEffect, useState} from "react";
 import {Button, Col, Container, Form, FormControl, FormSelect, Modal, Row} from "react-bootstrap";
-import {SubcategoriaDialogoProps} from "../Types";
+import {SubcategoriaDialogoProps, SubcategoriaGuardar} from "../Types";
 import CategoriaStore from "../../categoria/CategoriaStore";
+import {TipoEntrada} from "../../dialogo/Types";
+import {DialogoCreacionView} from "../../dialogo/DialogoCreacionView";
+import {observer} from "mobx-react";
 
 const categoriaModelo = new CategoriaStore();
 
-export const SubcategoriaDialogo = ({mostrarDialogo, alternarDialogo, guardar}:SubcategoriaDialogoProps) => {
-    const [formulario, setFormulario] = useState({
-        subcategoriaNombre: '',
-        subcategoriaCategoria: 0
-    });
-
+export const SubcategoriaDialogo = observer(({mostrarDialogo, alternarDialogo, guardar}:SubcategoriaDialogoProps) => {
+    let opciones: JSX.Element[] = [];
     const {listaResultados:categorias} = categoriaModelo;
 
-    useEffect(()=>{
+    useEffect(() => {
         categoriaModelo.obtenerCategorias(0);
     },[]);
 
-    return (
-        <Modal show={mostrarDialogo} onHide={() => {
-            alternarDialogo()
-        }}>
-            <Modal.Header closeButton>
-                <Modal.Title>
-                    Crear nueva cuenta
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Container>
-                    <Form onSubmit={event => {
-                        guardar(formulario.subcategoriaNombre, formulario.subcategoriaCategoria);
-                        setFormulario({subcategoriaNombre: '', subcategoriaCategoria: 0});
-                        event.preventDefault();
-                    }}>
-                        <Row>
-                            <Col>
-                                <Form.Label htmlFor='nombre_subcategoria'>Nombre subcategoría</Form.Label>
-                            </Col>
-                            <Col>
-                                <FormControl id='nombre_subcategoria' value={formulario.subcategoriaNombre} onChange={event => {
-                                    const {value} = event.target;
-                                    setFormulario(prevState => ({
-                                        ...prevState,
-                                        ['subcategoriaNombre']: value
-                                    }));
-                                }}/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Form.Label htmlFor='categoria'>Categoria</Form.Label>
-                            </Col>
-                            <Col>
-                                <FormSelect id='categoria' value={formulario.subcategoriaCategoria} onChange={event => {
-                                    const {value} = event.target;
-                                    setFormulario(prevState => ({
-                                        ...prevState,
-                                        ['subcategoriaCategoria']: Number(value)
-                                    }));
-                                }}>
-                                    <option defaultChecked>Seleccione una opción</option>
-                                    {categorias?.map(categoria => {
-                                        return (<option value={categoria.categoriaId}>{categoria.categoriaNombre}</option>)
-                                    })}
-                                </FormSelect>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md={"auto"}>
-                                <Button type={"submit"}>Guardar</Button>
-                            </Col>
-                        </Row>
-                    </Form>
-                </Container>
-            </Modal.Body>
-        </Modal>);
-}
+    opciones.push(<option defaultChecked>Seleccione una opción</option>);
+    const opcionesCategoria = categorias?.map(categoria => <option value={categoria.categoriaId}>{categoria.categoriaNombre}</option>);
+    opciones = opciones.concat(opcionesCategoria);
+
+    console.dir(categorias);
+    console.dir(opcionesCategoria);
+    console.dir(opciones);
+
+    const tipoEntrada: TipoEntrada[] = [
+        {
+            etiqueta: "Nombre subcategoría",
+            tipoEntrada: "text",
+            valorInicial: "",
+            nombreEntrada: "subcategoriaNombre"
+        },
+        {
+            etiqueta: "Categoría",
+            tipoEntrada: "select",
+            valorInicial: "",
+            nombreEntrada: "subcategoriaCategoria",
+            options: opciones
+        }
+    ];
+
+
+    return <DialogoCreacionView<SubcategoriaGuardar> ocultar={alternarDialogo} mostrar={mostrarDialogo} componentes={tipoEntrada} funcionGuardar={guardar} titulo={"Crear subcategoria"}/>
+});

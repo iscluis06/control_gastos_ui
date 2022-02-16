@@ -22,5 +22,10 @@ export type SubcategoriaResponse = {
 export type SubcategoriaDialogoProps = {
     mostrarDialogo: boolean,
     alternarDialogo: () => void,
-    guardar: (subcategoriaNombre: string, subcategoriaCategoria: number) => void
+    guardar: ({subcategoriaNombre, subcategoriaCategoria}: SubcategoriaGuardar) => void
+}
+
+export type SubcategoriaGuardar = {
+    subcategoriaNombre: string,
+    subcategoriaCategoria:number
 }

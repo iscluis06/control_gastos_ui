@@ -20,7 +20,7 @@ export type TipoEntrada = {
     nombreEntrada: string,
     valorInicial: 0 | '' | false,
     tipoEntrada: TiposComponente,
-    options?: HTMLOptionElement[]
+    options?: JSX.Element[]
 }
 
 
