@@ -4,6 +4,7 @@ import React, {useState} from "react";
 import {observer} from "mobx-react";
 import {DialogoView} from "./DialogoView";
 import styles from "./Dialogo.module.css";
+import {IServicioConsulta, Selector} from "../formulario/Selector";
 
 export const DialogoCreacionView = observer(<T, >({
                                                       funcionGuardar,
@@ -15,12 +16,19 @@ export const DialogoCreacionView = observer(<T, >({
     const stateProps = {} as any;
 
     componentes.map(componente => {
-        stateProps[componente.nombreEntrada] = componente.valorInicial;
+        stateProps[componente.nombreEntrada] = componente.valor ? componente.valor : componente.valorInicial;
     });
 
     const [formulario, setFormulario] = useState(stateProps);
 
-    const obtenerEntrada = (etiqueta: string, tipoEntrada: TiposComponente, nombreEntrada: string, options?: JSX.Element[]) => {
+    const actualizarEstadoSelector = (valor: string, nombreEntrada:string) => {
+        setFormulario((prevState: any) => ({
+            ...prevState,
+            [nombreEntrada]: valor
+        }))
+    }
+
+    const obtenerEntrada = (etiqueta: string, tipoEntrada: TiposComponente, nombreEntrada: string, options?: JSX.Element[], servicio?: IServicioConsulta) => {
         switch (tipoEntrada) {
             case 'select':
                 return (<FormSelect id={nombreEntrada} value={formulario[nombreEntrada]} onChange={event => {
@@ -62,6 +70,21 @@ export const DialogoCreacionView = observer(<T, >({
                         }))
                     }}/>);
                 break;
+            case 'id':
+                return (<FormControl hidden disabled id={nombreEntrada} value={formulario[nombreEntrada]}  onChange={event => {
+                    const {value} = event.target;
+                    setFormulario((prevState: any) => ({
+                        ...prevState,
+                        [nombreEntrada]: value
+                    }))
+                }}/>);
+                break;
+            case 'selector':
+                if(servicio) {
+                    return (<Selector id={nombreEntrada} referenciaEstado={actualizarEstadoSelector}
+                                      servicioConsulta={servicio.servicioConsulta}/>);
+                }
+                break;
             default:
                 return (<></>);
                 break;
@@ -79,11 +102,14 @@ export const DialogoCreacionView = observer(<T, >({
                 }}>
                     {componentes.map(componente => {
                         return (<Row className={styles.espacioFilas}>
-                            <Col>
-                                <Form.Label htmlFor={componente.nombreEntrada}>{componente.etiqueta}</Form.Label>
-                            </Col>
-                            <Col>
-                                {obtenerEntrada(componente.etiqueta, componente.tipoEntrada, componente.nombreEntrada, componente.options)}
+                            {
+                                componente.tipoEntrada !== 'id' &&
+                                <Col>
+                                    <Form.Label htmlFor={componente.nombreEntrada}>{componente.etiqueta}</Form.Label>
+                                </Col>
+                            }
+                            <Col className={componente.tipoEntrada !== 'id' && styles.ocultar}>
+                                {obtenerEntrada(componente.etiqueta, componente.tipoEntrada, componente.nombreEntrada, componente.options, componente.servicio)}
                             </Col>
                         </Row>);
                     })}

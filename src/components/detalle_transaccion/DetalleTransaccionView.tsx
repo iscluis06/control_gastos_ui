@@ -1,8 +1,8 @@
-import {DialogoCreacionView} from "../dialogo/DialogoCreacionView";
-import {TipoEntrada} from "../dialogo/Types";
+import {DialogoCreacionView} from "../comunes/dialogo/DialogoCreacionView";
+import {TipoEntrada} from "../comunes/dialogo/Types";
 import {DetalleTransaccionGuardar, DetalleTransacionProps} from "./Types";
 import {observer} from "mobx-react";
-import {DialogoDetalleView} from "../dialogo/DialogoDetalleView";
+import {DialogoDetalleView} from "../comunes/dialogo/DialogoDetalleView";
 
 
 export const DetalleTransaccionView = observer(({store}:DetalleTransacionProps) =>{

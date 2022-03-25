@@ -1,13 +1,9 @@
-import { useEffect} from "react";
-import CuentasStore from "../CuentasStore";
 import {Carousel, Col, Container, Row, Spinner} from "react-bootstrap";
-import {Cuenta} from "../Types";
+import {Cuenta, PanelCuentasViewProps} from "../Types";
 import {observer} from "mobx-react";
 import {TarjetaPanelView} from "../../tarjeta_panel/TarjetaPanelView";
 import {DialogoCrearCuentaView} from "./DialogoCrearCuentaView";
 import {convertirAValorMonetario} from "../../../utils/Moneda";
-
-const cuentasModel = new CuentasStore();
 
 const CuentasFragment = (props: Cuenta) => {
     const {cuentaNombre, cuentaMonto, cuentaDeuda} = props;
@@ -18,7 +14,8 @@ const CuentasFragment = (props: Cuenta) => {
                     <h3>{cuentaNombre}</h3>
                 </Row>
                 <Row>
-                    <TarjetaPanelView.Tabla nombreTarjeta={cuentaNombre} columnas={["Monto", "Deuda"]} info={[[convertirAValorMonetario(cuentaMonto),(cuentaDeuda ? 'Si':'No')]]} />
+                    <TarjetaPanelView.Tabla nombreTarjeta={cuentaNombre} columnas={["Monto", "Deuda"]}
+                                            info={[[convertirAValorMonetario(cuentaMonto), (cuentaDeuda ? 'Si' : 'No')]]}/>
                 </Row>
             </Col>
         </Row>
@@ -26,33 +23,17 @@ const CuentasFragment = (props: Cuenta) => {
 }
 
 
-export const PanelCuentasView = observer(() => {
-
-
-    useEffect(() => {
-        cuentasModel.obtenerCuentas();
-    },[])
-
-    const {listaResultados, mostrarDialogo, loading} = cuentasModel;
+export const PanelCuentasView = observer(({store}:PanelCuentasViewProps) => {
+    const {resultadosPanel, mostrarDialogo, cargando} = store;
     return (
         <>
             <TarjetaPanelView mensajeNuevoAccion={mostrarDialogo}
                               enlaceTodos={"/cuentas"}
                               nombreTarjeta={"Cuentas"} mensajeTodos={"Ver todas"}
-                              mensajeNuevo={"Nueva"} esCarousel={true}>
-                {loading &&
-                <Container>
-                    <Row>
-                        <Col>
-                            <Spinner style={{display: "block", marginRight: "auto", marginLeft: "auto"}}
-                                     animation="border" role="status">
-                                <span className="visually-hidden">Loading...</span>
-                            </Spinner>
-                        </Col>
-                    </Row>
-                </Container>}
-                {loading===false && listaResultados?.length===0 && <TarjetaPanelView.Vacia mensaje={"Sin resultados"} />}
-                {loading === false && listaResultados?.map(resultado => {
+                              mensajeNuevo={"Nueva"} esCarousel={true} cargando={cargando}>
+                {cargando === false && resultadosPanel?.length === 0 &&
+                <TarjetaPanelView.Vacia mensaje={"Sin resultados"}/>}
+                {cargando === false && resultadosPanel?.map(resultado => {
                     return (<Carousel.Item>
                         <TarjetaPanelView.Entrada>
                             <CuentasFragment
@@ -67,6 +48,6 @@ export const PanelCuentasView = observer(() => {
                     </Carousel.Item>);
                 })}
             </TarjetaPanelView>
-            <DialogoCrearCuentaView store={cuentasModel}/>
+            <DialogoCrearCuentaView store={store}/>
         </>);
 });

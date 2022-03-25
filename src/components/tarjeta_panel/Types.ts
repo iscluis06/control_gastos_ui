@@ -6,6 +6,7 @@ export type PanelProps = {
     mensajeNuevoAccion: () => void;
     children?: React.ReactNode;
     esCarousel: boolean;
+    cargando: boolean;
 }
 
 export type EntradaProps = {

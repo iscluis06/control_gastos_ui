@@ -1,15 +1,18 @@
 import {observer} from "mobx-react";
 import React, {useEffect} from "react";
 import {ComponenteProtegido} from "../ComponenteProtegido";
-import {TablaView} from "../tabla/TablaView";
+import {TablaView} from "../comunes/tabla/TablaView";
 import SubcategoriaStore from "./SubcategoriaStore";
 
 const subcategoiraStore = new SubcategoriaStore();
 
 export const SubcategoriaView = observer(() => {
     useEffect(()=>{
-        subcategoiraStore.obtenerSubcategorias(0);
-    })
+        const obtenerInfo = async() => {
+            await subcategoiraStore.actualizarResultados();
+        };
+        obtenerInfo();
+    }, []);
 
     const {listaResultados} = subcategoiraStore;
 

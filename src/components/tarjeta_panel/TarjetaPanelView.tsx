@@ -1,4 +1,4 @@
-import {Button, Card, Carousel, Col, Row, Table} from "react-bootstrap";
+import {Button, Card, Carousel, Col, Container, Row, Spinner, Table} from "react-bootstrap";
 import styles from './TarjetaPanelView.module.css';
 import classNames from "classnames";
 import {EntradaProps, PanelProps, TablaProps, VaciaProps} from "./Types";
@@ -30,6 +30,17 @@ const TarjetaPanelVacia = ({mensaje}: VaciaProps) => {
         </Card>);
 };
 
+const TarjetaCargando = () => (<Container>
+    <Row>
+        <Col>
+            <Spinner style={{display: "block", marginRight: "auto", marginLeft: "auto"}}
+                     animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </Spinner>
+        </Col>
+    </Row>
+</Container>);
+
 const TarjetaPanelTabla = ({columnas, info}: TablaProps) => {
     return (
         <Table responsive>
@@ -49,7 +60,7 @@ const TarjetaPanelTabla = ({columnas, info}: TablaProps) => {
 
 const TarjetaPanelView = (props: PanelProps) => {
     let navigate = useNavigate();
-    const {nombreTarjeta, mensajeTodos, mensajeNuevo, mensajeNuevoAccion, esCarousel, enlaceTodos} = props;
+    const {nombreTarjeta, mensajeTodos, mensajeNuevo, mensajeNuevoAccion, esCarousel, enlaceTodos, cargando} = props;
     return (
         <Col className={styles.rowGap}>
             <Row className={styles.tituloTarjeta}>
@@ -62,13 +73,14 @@ const TarjetaPanelView = (props: PanelProps) => {
             </Row>
             <Row>
                 <Col>
-                    {esCarousel &&
+                    {cargando && <TarjetaCargando />}
+                    {cargando == false && esCarousel &&
                     <Carousel indicators={false} interval={null} controls={true}
                               nextIcon={<span className={classNames(styles.arrow, styles.right)}/>}
                               prevIcon={<span className={classNames(styles.arrow, styles.left)}/>}>
                         {props.children}
                     </Carousel>}
-                    {esCarousel==false &&
+                    {cargando == false && esCarousel == false &&
                         props.children
                     }
                 </Col>

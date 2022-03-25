@@ -1,11 +1,9 @@
-import {Button, Col, Container, Form, FormControl, FormSelect, Modal, Row} from "react-bootstrap";
 import {observer} from "mobx-react";
-import {useState} from "react";
-import {DialogoCreacionViewProps, TipoEntrada} from "../../dialogo/Types";
-import {DialogoCreacionView} from "../../dialogo/DialogoCreacionView";
+import {TipoEntrada} from "../../comunes/dialogo/Types";
+import {DialogoCreacionView} from "../../comunes/dialogo/DialogoCreacionView";
 import {CuentaCreacionView, CuentaGuardarTipo} from "../Types";
 
-export const DialogoCrearCuentaView = observer(({store:{ocultarDialogo, mostrarDialogo,mostrar, guardar}}:CuentaCreacionView) => {
+export const DialogoCrearCuentaView = observer(({store:{ocultarDialogo, mostrar, guardar}}:CuentaCreacionView) => {
     const tiposEntrada: TipoEntrada[] = [
         {
             etiqueta: "Nombre",

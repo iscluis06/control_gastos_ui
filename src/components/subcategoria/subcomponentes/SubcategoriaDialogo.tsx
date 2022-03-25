@@ -1,28 +1,15 @@
-import {useEffect, useState} from "react";
-import {Button, Col, Container, Form, FormControl, FormSelect, Modal, Row} from "react-bootstrap";
 import {SubcategoriaDialogoProps, SubcategoriaGuardar} from "../Types";
-import CategoriaStore from "../../categoria/CategoriaStore";
-import {TipoEntrada} from "../../dialogo/Types";
-import {DialogoCreacionView} from "../../dialogo/DialogoCreacionView";
+import {TipoEntrada} from "../../comunes/dialogo/Types";
+import {DialogoCreacionView} from "../../comunes/dialogo/DialogoCreacionView";
 import {observer} from "mobx-react";
 
-const categoriaModelo = new CategoriaStore();
-
-export const SubcategoriaDialogo = observer(({mostrarDialogo, alternarDialogo, guardar}:SubcategoriaDialogoProps) => {
+export const SubcategoriaDialogo = observer(({mostrarDialogo, alternarDialogo, guardar, categoriaStore}:SubcategoriaDialogoProps) => {
     let opciones: JSX.Element[] = [];
-    const {listaResultados:categorias} = categoriaModelo;
-
-    useEffect(() => {
-        categoriaModelo.obtenerCategorias(0);
-    },[]);
+    const {listaResultados:categorias} = categoriaStore;
 
     opciones.push(<option defaultChecked>Seleccione una opción</option>);
     const opcionesCategoria = categorias?.map(categoria => <option value={categoria.categoriaId}>{categoria.categoriaNombre}</option>);
     opciones = opciones.concat(opcionesCategoria);
-
-    console.dir(categorias);
-    console.dir(opcionesCategoria);
-    console.dir(opciones);
 
     const tipoEntrada: TipoEntrada[] = [
         {
@@ -33,10 +20,11 @@ export const SubcategoriaDialogo = observer(({mostrarDialogo, alternarDialogo, g
         },
         {
             etiqueta: "Categoría",
-            tipoEntrada: "select",
+            tipoEntrada: 'selector',
             valorInicial: "",
             nombreEntrada: "subcategoriaCategoria",
-            options: opciones
+            options: opciones,
+            servicio: categoriaStore
         }
     ];
 

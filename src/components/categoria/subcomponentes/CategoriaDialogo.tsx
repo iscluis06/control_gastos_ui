@@ -1,8 +1,6 @@
-import {Button, Col, Container, Form, FormControl,  Modal, Row} from "react-bootstrap";
 import {CategoriaDialogoProps, CategoriaGuardar} from "../Types";
-import {useState} from "react";
-import {TipoEntrada} from "../../dialogo/Types";
-import {DialogoCreacionView} from "../../dialogo/DialogoCreacionView";
+import {TipoEntrada} from "../../comunes/dialogo/Types";
+import {DialogoCreacionView} from "../../comunes/dialogo/DialogoCreacionView";
 
 
 export const CategoriaDialogo = ({mostrarDialogo, alternarDialogo, guardar}:CategoriaDialogoProps) => {

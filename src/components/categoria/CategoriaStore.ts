@@ -1,54 +1,47 @@
 import {action, makeObservable, observable} from "mobx";
-import {Categoria, CategoriaGuardar, CategoriaResponse} from "./Types";
-import RequestLogic, {requestLogic} from "../../RequestLogic";
+import {Categoria, CategoriaGuardar, CategoriaResponse, MapeoPropiedades} from "./Types";
+import {requestLogic} from "../../RequestLogic";
+import StorePanel from "../../clases/StorePanel";
+import Observador from "../../clases/Observador";
+import {IServicioConsulta, OpcionSelector} from "../comunes/formulario/Selector";
 
-export default class CategoriaStore {
-    @observable
-    listaResultados: Categoria[] = [];
-
-    @observable
-    loading: boolean = false;
-    @observable
+export class CategoriaStore extends StorePanel<Categoria, CategoriaResponse> implements IServicioConsulta {
     mostrarDialogo: boolean = false;
-
+    relacionObjetos = MapeoPropiedades;
+    observador: Observador;
 
     constructor() {
-        makeObservable(this);
+        super("control_gastos/categorias");
+        makeObservable(this, {
+            mostrarDialogo: observable,
+            alternarDialogo: action.bound,
+            guardar: action.bound
+        });
+        this.servicioConsulta = this.servicioConsulta.bind(this);
+        this.observador = new Observador();
     }
 
-    @action.bound
     alternarDialogo() {
         this.mostrarDialogo = !this.mostrarDialogo;
     }
 
-    @action.bound
-    async obtenerCategorias(limit: number = 5) {
-        this.loading = true;
-        const response: CategoriaResponse[] = await requestLogic.realizarPeticion<CategoriaResponse[]>(`control_gastos/categorias/limit/${limit}`, "GET");
-        this.mapResultados(response);
-    }
-
-    @action.bound
-    mapResultados(responseBody: CategoriaResponse[]) {
-        this.listaResultados = responseBody?.map(resultado => ({
-            categoriaId: resultado.categoria_id,
-            categoriaNombre: resultado.categoria_nombre,
-            categoriaCreado: resultado.categoria_creado,
-            categoriaModificado: resultado.categoria_modificado,
-            categoriaUsuario: resultado.nombre_usuario
-        }));
-        this.loading = false;
-    }
-
-    @action.bound
-    async guardar({categoria_nombre}: CategoriaGuardar) {
+    override async guardar({categoria_nombre}: CategoriaGuardar) {
         const cuerpo = {
             categoria_nombre: categoria_nombre
         };
-        const response: CategoriaResponse = await requestLogic.realizarPeticion<CategoriaResponse>("control_gastos/categorias", "POST", cuerpo);
+        const response: CategoriaResponse = await requestLogic.realizarPeticion<CategoriaResponse>(this.urlServicio, "POST", cuerpo);
         if (response !==undefined) {
             this.mostrarDialogo = false;
-            this.obtenerCategorias();
+            this.actualizarResultadosPanel();
+            this.observador.dispararEvento("categoriasActualzadas");
         }
+    }
+
+    async servicioConsulta(consulta: string): Promise<OpcionSelector[]> {
+        const respuestaServidor: CategoriaResponse[] = await requestLogic.realizarPeticion<CategoriaResponse[]>(`${this.urlServicio}?${consulta && 'categoriaNombre='+consulta}`, `GET`);
+        return respuestaServidor.map(categoria => ({
+            etiqueta: categoria.categoria_nombre,
+            valor: categoria.categoria_id
+        }));
     }
 }

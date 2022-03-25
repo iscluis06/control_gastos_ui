@@ -1,4 +1,4 @@
-import {TablaView} from "../tabla/TablaView";
+import {TablaView} from "../comunes/tabla/TablaView";
 import CuentasStore from "./CuentasStore";
 import React, {useEffect} from "react";
 import {observer} from "mobx-react";
@@ -9,8 +9,11 @@ const cuentasModel = new CuentasStore();
 export const CuentasView = observer(() => {
 
     useEffect(()=>{
-        cuentasModel.obtenerCuentas(0);
-    })
+        const obtenerInfo = async() => {
+            await cuentasModel.actualizarResultados();
+        };
+        obtenerInfo();
+    }, []);
 
     const {listaResultados} = cuentasModel;
 

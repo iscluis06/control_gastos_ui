@@ -5,38 +5,37 @@ import {requestLogic} from "../../RequestLogic";
 export default class DetalleTransaccionStore {
     columnas: string[] = ["Nombre", "Descripción", "Usuario", "Fecha"];
 
-    callback: () => void;
-
-    @observable
     mostrar: boolean = false;
-
     idTransaccion: number = 0
-    @observable
     idDetalle: number | undefined = undefined;
-
-    @observable
     detalle: DetalleTransaccion | undefined;
-
-    @observable
     guardado: boolean = false;
 
-    constructor(callback: () => void) {
-        makeObservable(this);
+    constructor() {
+        makeObservable(this, {
+            mostrar: observable,
+            idTransaccion: observable,
+            idDetalle: observable,
+            detalle: observable,
+            guardado: observable,
+            asignarIdDetalle: action.bound,
+            mostrarDialogo: action.bound,
+            ocultarDialogo: action.bound,
+            obtenerDetalle: action.bound,
+            mapearRespuesta: action.bound
+        });
         this.guardar = this.guardar.bind(this);
         this.infoDetalle = this.infoDetalle.bind(this);
-        this.callback = callback;
     }
 
     asignarIdTransaccion(idTransaccion: number) {
         this.idTransaccion = idTransaccion;
     }
 
-    @action
     asignarIdDetalle(id: number) {
         this.idDetalle = id;
     }
 
-    @action.bound
     mostrarDialogo() {
         this.mostrar = true;
         if (this.idDetalle !== undefined) {
@@ -44,19 +43,16 @@ export default class DetalleTransaccionStore {
         }
     }
 
-    @action.bound
     ocultarDialogo() {
         this.mostrar = false;
         this.idDetalle = undefined;
     }
 
-    @action.bound
     async obtenerDetalle() {
         const response: DetalleTransaccionResponse = await requestLogic.realizarPeticion<DetalleTransaccionResponse>(`control_gastos/detalletransacciones/${this.idDetalle}`, "GET");
         this.mapearRespuesta(response);
     }
 
-    @action.bound
     mapearRespuesta(detalle: DetalleTransaccionResponse) {
         this.detalle = {
             detalleTransaccionId: detalle.detalle_trasanccion_id,
@@ -84,7 +80,7 @@ export default class DetalleTransaccionStore {
         }
     }
 
-    async guardar(datos: DetalleTransaccionGuardar) {
+    async guardar(datos: DetalleTransaccionGuardar, callback?: () => Promise<void>) {
         const cuerpo = {
             detalle_transaccion_nombre: datos.nombre,
             detalle_transaccion_descripcion: datos.descripcion,
@@ -92,7 +88,9 @@ export default class DetalleTransaccionStore {
         };
         const response: DetalleTransaccionResponse = await requestLogic.realizarPeticion(`control_gastos/detalletransacciones`, "POST", cuerpo);
         if (response !== undefined) {
-            this.callback();
+            if(callback) {
+                await callback();
+            }
             this.guardado = true;
             this.ocultarDialogo();
         }

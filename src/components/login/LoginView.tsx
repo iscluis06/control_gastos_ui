@@ -1,10 +1,8 @@
-import {Component} from "react";
-import LoginStore from "./LoginStore";
 import {Button, Container, Form, Modal, Row} from "react-bootstrap";
 import styles from './LoginView.module.css';
 import {observer} from "mobx-react";
 import {Navigate} from "react-router-dom";
-import {Notificacion} from "../notificaciones/Notificacion";
+import {Notificacion} from "../comunes/notificaciones/Notificacion";
 import {requestLogic} from "../../RequestLogic";
 import {LoginViewProps} from "./Types";
 

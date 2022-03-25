@@ -1,4 +1,4 @@
-import {Cuenta} from "../cuentas/Types";
+import {CategoriaStore} from "./CategoriaStore";
 
 export type Categoria = {
     categoriaId: number,
@@ -16,6 +16,14 @@ export type CategoriaResponse = {
     nombre_usuario: string
 }
 
+export const MapeoPropiedades = {
+    categoriaId: 'categoria_id',
+    categoriaNombre: 'categoria_nombre',
+    categoriaCreado: 'categoria_creado',
+    categoriaModificado: 'categoria_modificado',
+    categoriaUsuario: 'nombre_usuario'
+};
+
 export type CategoriaDialogoProps = {
     mostrarDialogo: boolean,
     alternarDialogo: () => void,
@@ -24,4 +32,8 @@ export type CategoriaDialogoProps = {
 
 export type CategoriaGuardar = {
     categoria_nombre: string
+}
+
+export type PanelCategoriaViewProps = {
+    store: CategoriaStore
 }

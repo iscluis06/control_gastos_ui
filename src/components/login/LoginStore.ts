@@ -4,35 +4,34 @@ import {FormControlElement} from '../../GlobalTypes';
 import {requestLogic} from "../../RequestLogic";
 
 export default class LoginStore {
-    @observable
     usuario: string = '';
-
-    @observable
     contrasena: string = '';
-
-    @observable
     error: boolean = false;
 
     constructor() {
-        makeObservable(this);
+        makeObservable(this, {
+            usuario: observable,
+            contrasena: observable,
+            error: observable,
+            actualizarError: action.bound,
+            actualizarUsuario: action.bound,
+            actualizarContrasena: action.bound,
+            iniciarSesion: action.bound,
+        });
     }
 
-    @action.bound
     actualizarError(error: boolean) {
         this.error = error;
     }
 
-    @action.bound
     actualizarUsuario(event: ChangeEvent<FormControlElement>) {
         this.usuario = event.target.value;
     }
 
-    @action.bound
     actualizarContrasena(event: ChangeEvent<FormControlElement>) {
         this.contrasena = event.target.value;
     }
 
-    @action.bound
     async iniciarSesion() {
         this.actualizarError(await requestLogic.obtenerToken(this.usuario, this.contrasena));
     }

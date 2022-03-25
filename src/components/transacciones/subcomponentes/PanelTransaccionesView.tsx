@@ -1,6 +1,5 @@
 import {TarjetaPanelView} from "../../tarjeta_panel/TarjetaPanelView";
-import {Button, Col, Container, Row, Spinner} from "react-bootstrap";
-import {useEffect} from "react";
+import {Button} from "react-bootstrap";
 import { TransaccionDialogo } from "./TransaccionDialogo";
 import {observer} from "mobx-react";
 import {PanelTransaccionesProps, Transaccion} from "../Types";
@@ -11,11 +10,7 @@ import styles from './PanelTransaccionesView.module.css';
 
 export const PanelTransaccionesView = observer(({store}:PanelTransaccionesProps) => {
 
-    const {alternarDialogo, loading, mostrarDialogo, listaResultados, guardar, obtenerTransacciones} = store;
-
-    useEffect(() => {
-        obtenerTransacciones();
-    },[]);
+    const {alternarDialogo, cargando, mostrarDialogo, resultadosPanel, guardar} = store;
 
     const infoMapping = (transacciones: Transaccion[]) => {
         return transacciones.map(transaccion => [
@@ -32,24 +27,13 @@ export const PanelTransaccionesView = observer(({store}:PanelTransaccionesProps)
 
     return (
         <>
-            <TarjetaPanelView nombreTarjeta={"Transacciones"} mensajeTodos={"Ver todas"} enlaceTodos={"/transacciones"} mensajeNuevo={"Nueva"} mensajeNuevoAccion={alternarDialogo} esCarousel={false}>
-                {loading === false && listaResultados?.length == 0 &&
+            <TarjetaPanelView cargando={cargando} nombreTarjeta={"Transacciones"} mensajeTodos={"Ver todas"} enlaceTodos={"/transacciones"} mensajeNuevo={"Nueva"} mensajeNuevoAccion={alternarDialogo} esCarousel={false}>
+                {cargando === false && resultadosPanel?.length == 0 &&
                 <TarjetaPanelView.Vacia mensaje={"Sin resultados"}/>}
-                {loading &&
-                <Container>
-                    <Row>
-                        <Col>
-                            <Spinner style={{display: "block", marginRight: "auto", marginLeft: "auto"}}
-                                     animation="border" role="status">
-                                <span className="visually-hidden">Loading...</span>
-                            </Spinner>
-                        </Col>
-                    </Row>
-                </Container>}
-                {loading === false && listaResultados?.length > 0 && (
+                {cargando === false && resultadosPanel?.length > 0 && (
                     <TarjetaPanelView.Entrada >
                         <TarjetaPanelView.Tabla nombreTarjeta={"transaccion"} columnas={["Subcategoria","Cuenta","Cantidad","Fecha", "Detalle"]}
-                                                info={infoMapping(listaResultados)} />
+                                                info={infoMapping(resultadosPanel)} />
                     </TarjetaPanelView.Entrada>)}
             </TarjetaPanelView>
             <TransaccionDialogo mostrarDialogo={mostrarDialogo}

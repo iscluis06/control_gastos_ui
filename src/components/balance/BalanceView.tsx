@@ -7,11 +7,7 @@ import {BalanceViewProps} from "./Types";
 
 export const BalanceView = observer(({store}: BalanceViewProps) => {
 
-    const {obtenerBalance, total, deuda, capital} = store;
-
-    useEffect(()=> {
-        obtenerBalance();
-    },[]);
+    const {total, deuda, capital} = store;
 
     return (
         <Modal.Dialog>

@@ -5,20 +5,23 @@ type TokenResponse = {
 }
 
 export default class RequestLogic {
-
-    @observable
     token: string = '';
-    @observable
     usuario: string = '';
-    @observable
     cabeceras: string[][] = [];
 
     constructor() {
-        makeObservable(this);
+        makeObservable(this, {
+            token: observable,
+            usuario: observable,
+            cabeceras: observable,
+            actualizarCredenciales: action.bound,
+            anadirCabecera: action.bound,
+            obtenerToken: action.bound,
+            realizarPeticion: action.bound
+        });
         this.cabeceras.push(["Content-Type", "application/json"]);
     }
 
-    @action.bound
     actualizarCredenciales(token:string, usuario:string) {
         this.token = token;
         this.usuario = usuario;
@@ -26,7 +29,6 @@ export default class RequestLogic {
     }
 
 
-    @action.bound
     anadirCabecera(cabecera: string, valor: string){
         const fila = this.cabeceras.findIndex(fila => fila[0]=="Authorization");
         if(fila!=-1) {
@@ -37,8 +39,8 @@ export default class RequestLogic {
         console.dir(toJS(this.cabeceras));
     }
 
-    @action.bound
     async obtenerToken(usuario: string, contrasena: string): Promise<boolean> {
+        console.dir(this);
         const result: TokenResponse = await this.realizarPeticion<TokenResponse>('api-token-auth/', "POST", {
             "username": usuario,
             "password": contrasena
@@ -54,7 +56,6 @@ export default class RequestLogic {
         return true;
     }
 
-    @action.bound
     async realizarPeticion<T>(url: string, metodo: string, cuerpo?: object, cabeceras?: string[][]): Promise<T> {
         let cabecerasPeticion: string[][] = [...this.cabeceras];
         if (cabeceras) {
@@ -69,10 +70,13 @@ export default class RequestLogic {
             return undefined as unknown as T;
         }
         const respuestaJson = await peticion.json();
-        const json: T = respuestaJson as unknown as T;
-        return new Promise((resolve, reject) => {
-            resolve(json);
-        });
+        let json: T;
+        if(metodo === "GET" && respuestaJson.hasOwnProperty("results") && Array.isArray(respuestaJson.results)){
+            json = respuestaJson.results as T;
+        }else {
+           json = respuestaJson as unknown as T;
+        }
+        return json;
     }
 }
 

@@ -1,16 +1,19 @@
 import {observer} from "mobx-react";
 import React, {useEffect} from "react";
 import {ComponenteProtegido} from "../ComponenteProtegido";
-import {TablaView} from "../tabla/TablaView";
-import CategoriaStore from "./CategoriaStore";
+import {TablaView} from "../comunes/tabla/TablaView";
+import {CategoriaStore} from "./CategoriaStore";
 
 const categoriaStore = new CategoriaStore();
 
 export const CategoriaView = observer(() => {
 
     useEffect(()=>{
-        categoriaStore.obtenerCategorias(0);
-    })
+        const obtenerInfo = async() => {
+            await categoriaStore.actualizarResultados();
+        };
+        obtenerInfo();
+    }, []);
 
     const {listaResultados} = categoriaStore;
 

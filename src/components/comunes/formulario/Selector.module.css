@@ -1,0 +1,23 @@
+.Selector{
+    width: inherit;
+}
+
+.SelectorResultados{
+    border: 1px dashed white;
+    width: inherit;
+    cursor: pointer;
+    padding: .375rem .75rem;
+}
+
+.SelectorLista{
+    box-shadow: 10px 5px 50px black;
+}
+
+.SelectorResultados:hover{
+    background-color: gray;
+    color: white
+}
+
+.SelectorTexto{
+    padding: 5px
+}

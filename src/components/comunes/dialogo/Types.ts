@@ -1,3 +1,5 @@
+import {IServicioConsulta} from "../formulario/Selector";
+
 export type DialogoViewProps = {
     titulo: string,
     mostrar: boolean,
@@ -18,10 +20,12 @@ export type DialogoDetalleViewProps = DialogoViewProps & {
 export type TipoEntrada = {
     etiqueta: string,
     nombreEntrada: string,
-    valorInicial: 0 | '' | false,
+    valorInicial: 0 | '' | false ,
+    valor?: number | string | boolean,
     tipoEntrada: TiposComponente,
-    options?: JSX.Element[]
+    options?: JSX.Element[],
+    servicio?: IServicioConsulta
 }
 
 
-export type TiposComponente = 'select' | 'text' | 'number' | 'checkbox';
+export type TiposComponente = 'select' | 'text' | 'number' | 'checkbox' | 'id' | 'selector';

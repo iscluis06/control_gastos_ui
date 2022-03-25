@@ -1,3 +1,5 @@
+import SubcategoriaStore from "./SubcategoriaStore";
+import {CategoriaStore} from "../categoria/CategoriaStore";
 
 export type Subcategoria = {
     subcategoriaId: number,
@@ -22,10 +24,26 @@ export type SubcategoriaResponse = {
 export type SubcategoriaDialogoProps = {
     mostrarDialogo: boolean,
     alternarDialogo: () => void,
-    guardar: ({subcategoriaNombre, subcategoriaCategoria}: SubcategoriaGuardar) => void
+    guardar: ({subcategoriaNombre, subcategoriaCategoria}: SubcategoriaGuardar) => void,
+    categoriaStore: CategoriaStore
 }
+
+export const MapeoPropiedades = {
+    subcategoriaId: 'subcategoria_id',
+    subcategoriaCategoria: 'subcategoria_categoria',
+    subcategoriaNombre: 'subcategoria_nombre',
+    subcategoriaCreado: 'subcategoria_creado',
+    subcategoriaModificado: 'subcategoria_modificado',
+    nombreUsuario: 'nombre_usuario',
+    nombreCategoria: 'nombre_categoria'
+};
 
 export type SubcategoriaGuardar = {
     subcategoriaNombre: string,
     subcategoriaCategoria:number
+}
+
+export type PanelSubcategoriaViewProps = {
+    store: SubcategoriaStore,
+    categoriaStore: CategoriaStore
 }

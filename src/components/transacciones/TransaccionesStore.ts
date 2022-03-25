@@ -1,30 +1,32 @@
 import {action, makeObservable, observable} from "mobx";
-import RequestLogic, {requestLogic} from "../../RequestLogic";
-import {Transaccion, TransaccionGuardar, TransaccionResponse} from "./Types";
+import {requestLogic} from "../../RequestLogic";
+import {MapeoPropiedades, Transaccion, TransaccionGuardar, TransaccionResponse} from "./Types";
 import DetalleTransaccionStore from "../detalle_transaccion/DetalleTransaccionStore";
-import {balanceStore} from "../balance/BalanceStore";
+import StorePanel from "../../clases/StorePanel";
 
-export class TransaccionesStore {
-    @observable
+export class TransaccionesStore extends StorePanel<Transaccion, TransaccionResponse> {
+    relacionObjetos = MapeoPropiedades;
     mostrarDialogo: boolean = false;
-
-    @observable
-    loading: boolean = false;
-
-    @observable
-    listaResultados: Transaccion[] = [];
-
     detalleTransaccion: DetalleTransaccionStore;
 
 
     constructor() {
-        makeObservable(this);
-        this.detalleTransaccion = new DetalleTransaccionStore(this.obtenerTransacciones);
+        super('control_gastos/transacciones');
+        makeObservable(this, {
+            mostrarDialogo: observable,
+            alternarDialogo: action.bound
+
+        });
+        this.detalleTransaccion = new DetalleTransaccionStore();
     }
 
-    @action.bound
     alternarDialogo() {
         this.mostrarDialogo = !this.mostrarDialogo;
+    }
+
+    definirDetalle(detalle: Transaccion){
+        this.detalle = detalle;
+        this.alternarDialogo();
     }
 
     crearDetalle(idTransaccion: number, transaccionDetalle: number){
@@ -33,39 +35,22 @@ export class TransaccionesStore {
         this.detalleTransaccion.mostrarDialogo();
     }
 
-    @action.bound
-    async obtenerTransacciones(limit: number = 5) {
-        this.loading = true;
-        const response: TransaccionResponse[] = await requestLogic.realizarPeticion<TransaccionResponse[]>(`control_gastos/transacciones/limit/${limit}`, "GET");
-        this.mapResultados(response);
-    }
-
-    @action.bound
-    mapResultados(responseBody: TransaccionResponse[]) {
-        this.listaResultados = responseBody?.map(transaccion => ({
-            transaccionId: transaccion.transaccion_id,
-            transaccionSubcategoria: transaccion.nombre_subcategoria,
-            transaccionCuenta: transaccion.nombre_cuenta,
-            transaccionFecha: transaccion.transaccion_fecha,
-            transaccionCantidad: transaccion.transaccion_cantidad,
-            transaccionUsuario: transaccion.nombre_usuario,
-            detalleTransaccion: transaccion.detalle_transaccion
-        }));
-        this.loading = false;
-    }
-
-    @action.bound
-    async guardar({subcategoria, cuenta, cantidad}: TransaccionGuardar) {
+    async guardar({subcategoria, cuenta, cantidad, id, callback}: TransaccionGuardar) {
         const cuerpo = {
             transaccion_subcategoria: subcategoria,
             transaccion_cuenta: cuenta,
             transaccion_cantidad: cantidad
-        };
-        const response: TransaccionResponse = await requestLogic.realizarPeticion<TransaccionResponse>("control_gastos/transacciones", "POST", cuerpo);
+        } as any;
+        if(id){
+            cuerpo['id'] = id;
+        }
+        const response: TransaccionResponse = await requestLogic.realizarPeticion<TransaccionResponse>(this.urlServicio, "POST", cuerpo);
         if (response !== undefined) {
             this.mostrarDialogo = false;
-            this.obtenerTransacciones();
-            balanceStore.obtenerBalance();
+            await this.actualizarResultadosPanel();
+            if (callback) {
+                await callback();
+            }
         }
     }
 }

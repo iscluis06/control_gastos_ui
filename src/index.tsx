@@ -11,6 +11,7 @@ import {CuentasView} from "./components/cuentas/CuentasView";
 import {CategoriaView} from "./components/categoria/CategoriaView";
 import {SubcategoriaView} from "./components/subcategoria/SubcategoriaView";
 import {TransaccionesView} from "./components/transacciones/TransaccionesView";
+import {PanelControlStore} from "./components/panel_control/PanelControlStore";
 
 
 ReactDOM.render(
@@ -18,7 +19,7 @@ ReactDOM.render(
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<LoginView store={new LoginStore()}/>}/>
-                <Route path="/panel_control" element={<PanelControlView/>}/>
+                <Route path="/panel_control" element={<PanelControlView store={new PanelControlStore()}/>}/>
                 <Route path="/cuentas" element={<CuentasView/>}/>
                 <Route path="/categorias" element={<CategoriaView/>}/>
                 <Route path="/subcategorias" element={<SubcategoriaView/>}/>
